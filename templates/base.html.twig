@@ -2,8 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        
         <title>BakerWare Opdracht</title>
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -13,14 +14,8 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}
-            <div id="app">
-                hoi {{ test }}!
-            </div>
-        {% endblock %}
-
-        {# <div id="app">
-            hoi {{ test }}!
-        </div> #}
+        <div id="app">
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>

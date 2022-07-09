@@ -5,7 +5,3 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
-
-app_bakerware_opdracht:
-    path: /
-    controller: App\Controller\Controller::index

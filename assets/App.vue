@@ -1,30 +1,28 @@
-<template>hoi {{ count }}</template>
+<template>
+    <div>
+        <Index />
+    </div>
+</template>
 
 <script>
     import { defineComponent } from 'vue'
+    import Index from './Index.vue'
 
     export default defineComponent({
-        // type inference enabled
-        
-        props: {
-            name: String,
-            msg: { type: String, required: true }
+        components: {
+            Index
         },
         
-        data() {
-            return {
-                count: 1
-            }
-        },
+        // props: {
+        //     name: String,
+        //     msg: { type: String, required: true },
+        //     firstname: String,
+        // },
         
-        created() {
-            console.log('hoi ik ben vue')
-        },
-        
-        mounted() {
-            this.name // type: string | undefined
-            this.msg // type: string
-            this.count // type: number
-        }
+        // mounted() {
+        //     this.name // type: string | undefined
+        //     this.msg // type: string
+        //     this.count // type: number
+        // }
     })
 </script>
