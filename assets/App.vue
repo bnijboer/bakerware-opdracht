@@ -1,28 +1,72 @@
 <template>
     <div>
-        <Index />
+        <div class="row">
+            <div class="heading">Normal property:</div>
+            <div>First name: {{ firstName }}</div>
+        </div>
+        
+        <div v-if="lastName" class="row">
+            <div class="heading">Computed property:</div>
+            <div>Full name: {{ fullName }}</div>
+        </div>
+        
+        <button @click="getData">Print full name</button>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import { defineComponent } from 'vue'
-    import Index from './Index.vue'
 
     export default defineComponent({
-        components: {
-            Index
+        data() {
+            return {
+                firstName: 'Brendan',
+                lastName: null,
+                success: null
+            }
         },
         
-        // props: {
-        //     name: String,
-        //     msg: { type: String, required: true },
-        //     firstname: String,
-        // },
+        watch: {
+            lastName() {
+                if (this.success) {
+                    console.log('Successfully fetched last name from the UserRepository service!');
+                }
+            }
+        },
         
-        // mounted() {
-        //     this.name // type: string | undefined
-        //     this.msg // type: string
-        //     this.count // type: number
-        // }
+        computed: {
+            fullName(): string {
+                return this.firstName + ' ' + this.lastName;
+            }
+        },
+        
+        methods: {
+            getData() {
+                const url: string = '/fetch';
+                
+                fetch(url)
+                    .then(data => {
+                        return data.json();
+                    })
+                    .then(response => {
+                        this.lastName = response.lastName;
+                        this.success = true;
+                    });
+            }
+        }
     })
 </script>
+
+<style scoped>
+    .heading {
+        font-weight: bold;
+    }
+    
+    .row {
+        margin-bottom: 10px;
+    }
+    
+    button {
+        display: block;
+    }
+</style>
