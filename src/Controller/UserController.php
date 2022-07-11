@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Service\UserManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,32 +18,29 @@ class UserController extends AbstractController
     public function store(Request $request, ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
+        
+        $data = json_decode($request->request->get('user'));
 
         $user = new User();
-        $user->setFirstName($request->request->get('firstName'));
-        $user->setLastName($request->request->get('lastName'));
-
-        // tell Doctrine you want to (eventually) save the user (no queries yet)
+        
+        $user->setFirstName($data->firstName);
+        $user->setLastName($data->lastName);
+        
         $entityManager->persist($user);
 
-        // actually executes the queries (i.e. the INSERT query)
         $entityManager->flush();
-
-        return new Response('Saved new user with id '.$user->getId());
+        
+        $message = 'User saved successfully';
+        
+        return $this->json(compact('message'));
     }
     
     /**
      * @Route("/users/{id}", methods={"GET"})
      */
-    public function show(int $id, UserRepository $userRepository)
+    public function show(int $id, UserManager $service)
     {
-        $user = $userRepository->find($id);
-
-        if (!$user) {
-            throw $this->createNotFoundException(
-                'No user found for id '.$id
-            );
-        }
+        $user = $service->find($id);
         
         return $this->json(compact('user'));
     }
