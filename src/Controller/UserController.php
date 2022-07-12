@@ -17,31 +17,42 @@ class UserController extends AbstractController
      */
     public function store(Request $request, ManagerRegistry $doctrine): Response
     {
-        $entityManager = $doctrine->getManager();
         
         $data = json_decode($request->request->get('user'));
 
         $user = new User();
-        
         $user->setFirstName($data->firstName);
         $user->setLastName($data->lastName);
         
+        $entityManager = $doctrine->getManager();
         $entityManager->persist($user);
-
         $entityManager->flush();
         
         $message = 'User saved successfully';
+
+        $response = new Response();
+        $response->setContent(json_encode(compact('message')));
+        $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
         
-        return $this->json(compact('message'));
+        return $response;
     }
     
     /**
      * @Route("/users/{id}", methods={"GET"})
      */
-    public function show(int $id, UserManager $service)
+    public function show(int $id, UserManager $service): Response
     {
         $user = $service->find($id);
         
-        return $this->json(compact('user'));
+        $response = new Response();
+        $response->setContent(json_encode([
+            'user' => [
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName()
+            ]
+        ]));
+        $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+        
+        return $response;
     }
 }
